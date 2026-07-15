@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Textos con IA</title>
+    <title>Generador de Textos Estructurado</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -101,26 +101,15 @@
             text-transform: uppercase;
             overflow-y: auto;
             word-wrap: break-word;
-        }
-
-        .api-box {
-            background: #fef08a;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #fef08a;
+            font-size: 13px;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
 <div style="max-width: 1000px; width: 100%;">
-    <center><h1>Redactor de Perfiles con IA</h1></center>
-    
-    <div class="card api-box">
-        <label for="apiKey">🔑 Pega tu Gemini API Key aquí:</label>
-        <input type="password" id="apiKey" placeholder="AIzaSy..." style="background: white;">
-    </div>
+    <center><h1>Generador de Dictámenes e Informes</h1></center>
 
     <div class="container">
         <div class="card">
@@ -128,60 +117,60 @@
             <form id="dataForm" onsubmit="return false;">
                 <div class="form-group">
                     <label>NOMBRE</label>
-                    <input type="text" id="nombre" placeholder="Ej. Juan Pérez">
+                    <input type="text" id="nombre" placeholder="Ej. JUAN PÉREZ">
                 </div>
                 
                 <div class="grid-inputs">
                     <div class="form-group">
                         <label>EDAD</label>
-                        <input type="number" id="edad" placeholder="Ej. 35">
+                        <input type="text" id="edad" placeholder="Ej. 35 AÑOS">
                     </div>
                     <div class="form-group">
                         <label>ESTADO CIVIL</label>
-                        <input type="text" id="estadoCivil" placeholder="Ej. Soltero">
+                        <input type="text" id="estadoCivil" placeholder="Ej. CASADO">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>UBICACIÓN DEL NEGOCIO</label>
-                    <input type="text" id="ubicacion" placeholder="Ej. Guadalajara, Jalisco">
+                    <input type="text" id="ubicacion" placeholder="Ej. HERMOSILLO, SONORA">
                 </div>
 
                 <div class="form-group">
                     <label>ACTIVIDAD / GIRO</label>
-                    <input type="text" id="actividad" placeholder="Ej. Abarrotes y Comercio al por menor">
+                    <input type="text" id="actividad" placeholder="Ej. COMERCIALIZACIÓN DE CAFÉ">
                 </div>
 
                 <div class="grid-inputs">
                     <div class="form-group">
                         <label>ANTIGÜEDAD NEGOCIO</label>
-                        <input type="text" id="antiguedad" placeholder="Ej. 3 años">
+                        <input type="text" id="antiguedad" placeholder="Ej. 3 AÑOS">
                     </div>
                     <div class="form-group">
                         <label>EXPERIENCIA EN EL GIRO</label>
-                        <input type="text" id="experiencia" placeholder="Ej. 5 años">
+                        <input type="text" id="experiencia" placeholder="Ej. 5 AÑOS">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>MONTO FINANCIAMIENTO</label>
-                    <input type="text" id="monto" placeholder="Ej. $50,000 MXN">
+                    <input type="text" id="monto" placeholder="Ej. $150,000.00 MXN">
                 </div>
 
                 <div class="form-group">
                     <label>FINANCIAMIENTO PARA (DESTINO)</label>
-                    <textarea id="destino" rows="2" placeholder="Ej. Compra de mercancía y vitrina exhibidora"></textarea>
+                    <textarea id="destino" rows="2" placeholder="Ej. COMPRA DE MERCANCÍA Y MATERIA PRIMA PARA OPERACIÓN"></textarea>
                 </div>
 
-                <button type="button" id="btnGenerar">Generar Texto con IA</button>
+                <button type="button" id="btnGenerar">Generar Texto Continuo</button>
             </form>
         </div>
 
         <div class="card" style="display: flex; flex-direction: column;">
-            <h2>Texto Generado</h2>
-            <p style="font-size: 0.9rem; color: #64748b; margin: 0;">El resultado se generará automáticamente en un solo párrafo y en mayúsculas.</p>
+            <h2>Texto Estructurado</h2>
+            <p style="font-size: 0.9rem; color: #64748b; margin: 0;">El informe ejecutivo se redactará en un solo párrafo y completamente en letras mayúsculas.</p>
             
-            <div id="resultado" class="result-box">El texto aparecerá aquí...</div>
+            <div id="resultado" class="result-box">El dictamen final aparecerá aquí...</div>
             
             <button id="btnCopiar" style="background-color: #10b981;">Copiar Texto</button>
         </div>
@@ -189,99 +178,41 @@
 </div>
 
 <script>
-    document.getElementById('btnGenerar').addEventListener('click', async () => {
-        const apiKey = document.getElementById('apiKey').value.trim();
-        const btnGenerar = document.getElementById('btnGenerar');
-        const resultadoDiv = document.getElementById('resultado');
-
-        if (!apiKey) {
-            alert('Por favor, ingresa tu API Key de Gemini arriba.');
-            return;
-        }
-
+    document.getElementById('btnGenerar').addEventListener('click', () => {
         // Campos a validar
         const campos = ['nombre', 'edad', 'estadoCivil', 'ubicacion', 'actividad', 'antiguedad', 'experiencia', 'monto', 'destino'];
         for (let id of campos) {
             if (!document.getElementById(id).value.trim()) {
-                alert('Por favor, llena todos los campos del formulario.');
+                alert('Por favor, llene todos los campos para estructurar el dictamen.');
                 return;
             }
         }
 
-        const datos = {
-            nombre: document.getElementById('nombre').value,
-            edad: document.getElementById('edad').value,
-            estadoCivil: document.getElementById('estadoCivil').value,
-            ubicacion: document.getElementById('ubicacion').value,
-            actividad: document.getElementById('actividad').value,
-            antiguedad: document.getElementById('antiguedad').value,
-            experiencia: document.getElementById('experiencia').value,
-            monto: document.getElementById('monto').value,
-            destino: document.getElementById('destino').value
-        };
+        // Obtener valores y limpiar espacios
+        const nombre = document.getElementById('nombre').value.trim();
+        const edad = document.getElementById('edad').value.trim();
+        const estadoCivil = document.getElementById('estadoCivil').value.trim();
+        const ubicacion = document.getElementById('ubicacion').value.trim();
+        const actividad = document.getElementById('actividad').value.trim();
+        const antiguedad = document.getElementById('antiguedad').value.trim();
+        const experiencia = document.getElementById('experiencia').value.trim();
+        const monto = document.getElementById('monto').value.trim();
+        const destino = document.getElementById('destino').value.trim();
 
-        btnGenerar.innerText = "Procesando con IA...";
-        btnGenerar.disabled = true;
-        resultadoDiv.innerText = "Redactando...";
+        // Estructura de redacción profesional continua
+        let parrafoFinal = `EL SOLICITANTE ${nombre}, DE ${edad} DE EDAD Y ESTADO CIVIL ${estadoCivil}, CUENTA CON UN NEGOCIO CON UBICACIÓN EN ${ubicacion} DEDICADO A LA ACTIVIDAD DE ${actividad}. DICHO ESTABLECIMIENTO REGISTRA UNA ANTIGÜEDAD DE ${antiguedad} Y EL TITULAR ACREDITA UNA EXPERIENCIA EN EL GIRO DE ${experiencia}. ASIMISMO, SE SOLICITA UN MONTO DE FINANCIAMIENTO POR LA CANTIDAD DE ${monto}, EL CUAL SERÁ DESTINADO ESTRICTAMENTE PARA LA INVERSIÓN EN ${destino}. REVISADO EL EXPEDIENTE SE DETERMINA QUE LOS DATOS COINCIDEN CON LOS REQUISITOS ESTABLECIDOS.`;
 
-        const prompt = `Actúa como un analista de crédito profesional. Con los siguientes datos, redacta un perfil ejecutivo del cliente. 
-        REGLAS ESTRICTAS:
-        1. Debe ser un SOLO PÁRRAFO continuo.
-        2. Debe estar TODO EN MAYÚSCULAS.
-        3. No uses viñetas, no uses saltos de línea ni negritas.
-        
-        Datos del cliente:
-        - Nombre: ${datos.nombre}
-        - Edad: ${datos.edad} años
-        - Estado Civil: ${datos.estadoCivil}
-        - Ubicación del Negocio: ${datos.ubicacion}
-        - Actividad del Negocio: ${datos.actividad}
-        - Antigüedad del Negocio: ${datos.antiguedad}
-        - Experiencia en el giro: ${datos.experiencia}
-        - Monto del Financiamiento solicitado: ${datos.monto}
-        - Destino del Financiamiento: ${datos.destino}`;
+        // Asegurar formato estricto: mayúsculas y un solo párrafo continuo
+        parrafoFinal = parrafoFinal.toUpperCase().replace(/\s+/g, ' ');
 
-        // Intentar con una petición directa HTTP a la API oficial (Evita el bloqueo de módulos)
-        const modelos = ['gemini-2.5-flash', 'gemini-1.5-flash'];
-        let exito = false;
-
-        for (let mod of modelos) {
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${mod}:generateContent?key=${apiKey}`;
-                
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }]
-                    })
-                });
-
-                const json = await response.json();
-                
-                if (json.candidates && json.candidates[0].content.parts[0].text) {
-                    let textoFinal = json.candidates[0].content.parts[0].text.toUpperCase().trim();
-                    resultadoDiv.innerText = textoFinal;
-                    exito = true;
-                    break;
-                }
-            } catch (err) {
-                console.error("Error con modelo " + mod, err);
-            }
-        }
-
-        if (!exito) {
-            resultadoDiv.innerText = "ERROR AL COMUNICAR CON GEMINI. VERIFICA TU API KEY O INTENTA DE NUEVO MÁS TARDE.";
-        }
-
-        btnGenerar.innerText = "Generar Texto con IA";
-        btnGenerar.disabled = false;
+        // Pintar en el panel derecho
+        document.getElementById('resultado').innerText = parrafoFinal;
     });
 
     // Función del botón Copiar
     document.getElementById('btnCopiar').addEventListener('click', () => {
         const texto = document.getElementById('resultado').innerText;
-        if(texto && !texto.includes("El texto aparecerá aquí") && !texto.includes("Redactando")) {
+        if(texto && !texto.includes("El dictamen final aparecerá aquí")) {
             navigator.clipboard.writeText(texto);
             alert("¡Texto copiado al portapapeles!");
         }
