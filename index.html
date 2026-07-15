@@ -181,7 +181,7 @@
 
         <!-- Panel de Resultado -->
         <div class="card" style="display: flex; flex-direction: column;">
-            <h2>Texto Generado</h2>
+            <h2>Texto Generated</h2>
             <p style="font-size: 0.9rem; color: #64748b; margin: 0;">El resultado se generará automáticamente en un solo párrafo y en mayúsculas.</p>
             
             <div id="resultado" class="result-box">El texto aparecerá aquí...</div>
@@ -207,7 +207,6 @@
             return;
         }
 
-        // Obtener valores de los campos
         const datos = {
             nombre: document.getElementById('nombre').value,
             edad: document.getElementById('edad').value,
@@ -220,55 +219,67 @@
             destino: document.getElementById('destino').value
         };
 
-        try {
-            btnGenerar.innerText = "Procesando con IA...";
-            btnGenerar.disabled = true;
-            resultadoDiv.innerText = "Redactando...";
+        // Lista de modelos a intentar en orden de prioridad
+        const modelosAIntentar = ['gemini-3.5-flash', 'gemini-2.5-flash-pro', 'gemini-1.5-flash'];
+        let respuestaExitosa = null;
+        let ultimoError = "";
 
-            // Inicializar la IA con la API key provista
-            const ai = new GoogleGenAI({ apiKey: apiKey });
-            
-            // Instrucción estricta para la IA
-            const prompt = `Actúa como un analista de crédito profesional. Con los siguientes datos, redacta un perfil ejecutivo del cliente. 
-            REGLAS ESTRICTAS:
-            1. Debe ser un SOLO PÁRRAFO continuo.
-            2. Debe estar TODO EN MAYÚSCULAS.
-            3. No uses viñetas, no uses saltos de línea ni negritas.
-            
-            Datos del cliente:
-            - Nombre: ${datos.nombre}
-            - Edad: ${datos.edad} años
-            - Estado Civil: ${datos.estadoCivil}
-            - Ubicación del Negocio: ${datos.ubicacion}
-            - Actividad del Negocio: ${datos.actividad}
-            - Antigüedad del Negocio: ${datos.antiguedad}
-            - Experiencia en el giro: ${datos.experiencia}
-            - Monto del Financiamiento solicitado: ${datos.monto}
-            - Destino del Financiamiento: ${datos.destino}`;
+        btnGenerar.innerText = "Procesando con IA...";
+        btnGenerar.disabled = true;
+        resultadoDiv.innerText = "Redactando...";
 
-            // Llamada actualizada al modelo gemini-3.5-flash
-            const response = await ai.models.generateContent({
-                model: 'gemini-3.5-flash',
-                contents: prompt,
-            });
+        const ai = new GoogleGenAI({ apiKey: apiKey });
+        
+        const prompt = `Actúa como un analista de crédito profesional. Con los siguientes datos, redacta un perfil ejecutivo del cliente. 
+        REGLAS ESTRICTAS:
+        1. Debe ser un SOLO PÁRRAFO continuo.
+        2. Debe estar TODO EN MAYÚSCULAS.
+        3. No uses viñetas, no uses saltos de línea ni negritas.
+        
+        Datos del cliente:
+        - Nombre: ${datos.nombre}
+        - Edad: ${datos.edad} años
+        - Estado Civil: ${datos.estadoCivil}
+        - Ubicación del Negocio: ${datos.ubicacion}
+        - Actividad del Negocio: ${datos.actividad}
+        - Antigüedad del Negocio: ${datos.antiguedad}
+        - Experiencia en el giro: ${datos.experiencia}
+        - Monto del Financiamiento solicitado: ${datos.monto}
+        - Destino del Financiamiento: ${datos.destino}`;
 
-            // Asegurar que el texto esté en mayúsculas y guardarlo
-            let textoFinal = response.text.toUpperCase().trim();
-            resultadoDiv.innerText = textoFinal;
-
-        } catch (error) {
-            console.error(error);
-            resultadoDiv.innerText = "ERROR AL GENERAR EL TEXTO: " + error.message;
-        } finally {
-            btnGenerar.innerText = "Generar Texto con IA";
-            btnGenerar.disabled = false;
+        // Bucle para intentar con diferentes modelos si hay saturación (Error 503)
+        for (const modelo del modelosAIntentar) {
+            try {
+                console.log(`Intentando con el modelo: ${modelo}`);
+                const response = await ai.models.generateContent({
+                    model: modelo,
+                    contents: prompt,
+                });
+                respuestaExitosa = response.text;
+                break; // Si funciona, salimos del bucle
+            } catch (error) {
+                console.error(`Fallo con el modelo ${modelo}:`, error);
+                ultimoError = error.message;
+                // Si es un error de alta demanda o saturación, continúa al siguiente bucle
+                continue;
+            }
         }
+
+        if (respuestaExitosa) {
+            let textoFinal = respuestaExitosa.toUpperCase().trim();
+            resultadoDiv.innerText = textoFinal;
+        } else {
+            resultadoDiv.innerText = "LOS SERVIDORES DE GOOGLE ESTÁN SATURADOS ACTUALMENTE. POR FAVOR, INTENTA DE NUEVO EN UNOS MINUTOS. DETALLE: " + ultimoError;
+        }
+
+        btnGenerar.innerText = "Generar Texto con IA";
+        btnGenerar.disabled = false;
     });
 
     // Función del botón Copiar
     document.getElementById('btnCopiar').addEventListener('click', () => {
         const texto = document.getElementById('resultado').innerText;
-        if(texto && texto !== "El texto aparecerá aquí..." && texto !== "Redactando...") {
+        if(texto && !texto.includes("El texto aparecerá aquí") && !texto.includes("Redactando")) {
             navigator.clipboard.writeText(texto);
             alert("¡Texto copiado al portapapeles!");
         }
