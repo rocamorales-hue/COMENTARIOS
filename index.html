@@ -117,69 +117,66 @@
 <div style="max-width: 1000px; width: 100%;">
     <center><h1>Redactor de Perfiles con IA</h1></center>
     
-    <!-- Configuración de la API Key -->
     <div class="card api-box">
         <label for="apiKey">🔑 Pega tu Gemini API Key aquí:</label>
         <input type="password" id="apiKey" placeholder="AIzaSy..." style="background: white;">
     </div>
 
     <div class="container">
-        <!-- Formulario de Datos -->
         <div class="card">
             <h2>Datos del Solicitante</h2>
             <form id="dataForm" onsubmit="return false;">
                 <div class="form-group">
                     <label>NOMBRE</label>
-                    <input type="text" id="nombre" required placeholder="Ej. Juan Pérez">
+                    <input type="text" id="nombre" placeholder="Ej. Juan Pérez">
                 </div>
                 
                 <div class="grid-inputs">
                     <div class="form-group">
                         <label>EDAD</label>
-                        <input type="number" id="edad" required placeholder="Ej. 35">
+                        <input type="number" id="edad" placeholder="Ej. 35">
                     </div>
                     <div class="form-group">
                         <label>ESTADO CIVIL</label>
-                        <input type="text" id="estadoCivil" required placeholder="Ej. Soltero">
+                        <input type="text" id="estadoCivil" placeholder="Ej. Soltero">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>UBICACIÓN DEL NEGOCIO</label>
-                    <input type="text" id="ubicacion" required placeholder="Ej. Guadalajara, Jalisco">
+                    <input type="text" id="ubicacion" placeholder="Ej. Guadalajara, Jalisco">
                 </div>
 
                 <div class="form-group">
                     <label>ACTIVIDAD / GIRO</label>
-                    <input type="text" id="actividad" required placeholder="Ej. Abarrotes y Comercio al por menor">
+                    <input type="text" id="actividad" placeholder="Ej. Abarrotes y Comercio al por menor">
                 </div>
 
                 <div class="grid-inputs">
                     <div class="form-group">
                         <label>ANTIGÜEDAD NEGOCIO</label>
-                        <input type="text" id="antiguedad" required placeholder="Ej. 3 años">
+                        <input type="text" id="antiguedad" placeholder="Ej. 3 años">
                     </div>
                     <div class="form-group">
                         <label>EXPERIENCIA EN EL GIRO</label>
-                        <input type="text" id="experiencia" required placeholder="Ej. 5 años">
+                        <input type="text" id="experiencia" placeholder="Ej. 5 años">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>MONTO FINANCIAMIENTO</label>
-                    <input type="text" id="monto" required placeholder="Ej. $50,000 MXN">
+                    <input type="text" id="monto" placeholder="Ej. $50,000 MXN">
                 </div>
 
                 <div class="form-group">
                     <label>FINANCIAMIENTO PARA (DESTINO)</label>
-                    <textarea id="destino" rows="2" required placeholder="Ej. Compra de mercancía y vitrina exhibidora"></textarea>
+                    <textarea id="destino" rows="2" placeholder="Ej. Compra de mercancía y vitrina exhibidora"></textarea>
                 </div>
 
                 <button type="button" id="btnGenerar">Generar Texto con IA</button>
             </form>
         </div>
 
-        <!-- Panel de Resultado -->
         <div class="card" style="display: flex; flex-direction: column;">
             <h2>Texto Generado</h2>
             <p style="font-size: 0.9rem; color: #64748b; margin: 0;">El resultado se generará automáticamente en un solo párrafo y en mayúsculas.</p>
@@ -191,15 +188,8 @@
     </div>
 </div>
 
-<!-- Importar la librería de Google Gen AI -->
-<script type="module">
-    import { GoogleGenAI } from "https://esm.run/@google/genai";
-
-    document.getElementById('btnGenerar').addEventListener('click', async (e) => {
-        // Asegurar que no se recargue la página bajo ninguna circunstancia
-        e.preventDefault();
-        e.stopPropagation();
-        
+<script>
+    document.getElementById('btnGenerar').addEventListener('click', async () => {
         const apiKey = document.getElementById('apiKey').value.trim();
         const btnGenerar = document.getElementById('btnGenerar');
         const resultadoDiv = document.getElementById('resultado');
@@ -209,7 +199,7 @@
             return;
         }
 
-        // Validar manualmente que los campos no estén vacíos
+        // Campos a validar
         const campos = ['nombre', 'edad', 'estadoCivil', 'ubicacion', 'actividad', 'antiguedad', 'experiencia', 'monto', 'destino'];
         for (let id of campos) {
             if (!document.getElementById(id).value.trim()) {
@@ -230,63 +220,62 @@
             destino: document.getElementById('destino').value
         };
 
-        const modelosAIntentar = ['gemini-2.5-flash', 'gemini-2.5-flash-pro', 'gemini-1.5-flash'];
-        let respuestaExitosa = null;
-        let ultimoError = "";
-
         btnGenerar.innerText = "Procesando con IA...";
         btnGenerar.disabled = true;
         resultadoDiv.innerText = "Redactando...";
 
-        try {
-            const ai = new GoogleGenAI({ apiKey: apiKey });
-            
-            const prompt = `Actúa como un analista de crédito profesional. Con los siguientes datos, redacta un perfil ejecutivo del cliente. 
-            REGLAS ESTRICTAS:
-            1. Debe ser un SOLO PÁRRAFO continuo.
-            2. Debe estar TODO EN MAYÚSCULAS.
-            3. No uses viñetas, no uses saltos de línea ni negritas.
-            
-            Datos del cliente:
-            - Nombre: ${datos.nombre}
-            - Edad: ${datos.edad} años
-            - Estado Civil: ${datos.estadoCivil}
-            - Ubicación del Negocio: ${datos.ubicacion}
-            - Actividad del Negocio: ${datos.actividad}
-            - Antigüedad del Negocio: ${datos.antiguedad}
-            - Experiencia en el giro: ${datos.experiencia}
-            - Monto del Financiamiento solicitado: ${datos.monto}
-            - Destino del Financiamiento: ${datos.destino}`;
+        const prompt = `Actúa como un analista de crédito profesional. Con los siguientes datos, redacta un perfil ejecutivo del cliente. 
+        REGLAS ESTRICTAS:
+        1. Debe ser un SOLO PÁRRAFO continuo.
+        2. Debe estar TODO EN MAYÚSCULAS.
+        3. No uses viñetas, no uses saltos de línea ni negritas.
+        
+        Datos del cliente:
+        - Nombre: ${datos.nombre}
+        - Edad: ${datos.edad} años
+        - Estado Civil: ${datos.estadoCivil}
+        - Ubicación del Negocio: ${datos.ubicacion}
+        - Actividad del Negocio: ${datos.actividad}
+        - Antigüedad del Negocio: ${datos.antiguedad}
+        - Experiencia en el giro: ${datos.experiencia}
+        - Monto del Financiamiento solicitado: ${datos.monto}
+        - Destino del Financiamiento: ${datos.destino}`;
 
-            for (const modelo del modelosAIntentar) {
-                try {
-                    const response = await ai.models.generateContent({
-                        model: modelo,
-                        contents: prompt,
-                    });
-                    if (response && response.text) {
-                        respuestaExitosa = response.text;
-                        break;
-                    }
-                } catch (err) {
-                    ultimoError = err.message || err;
-                    continue;
+        // Intentar con una petición directa HTTP a la API oficial (Evita el bloqueo de módulos)
+        const modelos = ['gemini-2.5-flash', 'gemini-1.5-flash'];
+        let exito = false;
+
+        for (let mod of modelos) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${mod}:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+
+                const json = await response.json();
+                
+                if (json.candidates && json.candidates[0].content.parts[0].text) {
+                    let textoFinal = json.candidates[0].content.parts[0].text.toUpperCase().trim();
+                    resultadoDiv.innerText = textoFinal;
+                    exito = true;
+                    break;
                 }
+            } catch (err) {
+                console.error("Error con modelo " + mod, err);
             }
-
-            if (respuestaExitosa) {
-                let textoFinal = respuestaExitosa.toUpperCase().trim();
-                resultadoDiv.innerText = textoFinal;
-            } else {
-                resultadoDiv.innerText = "ERROR AL GENERAR. DETALLE: " + ultimoError;
-            }
-
-        } catch (error) {
-            resultadoDiv.innerText = "ERROR CRÍTICO: " + error.message;
-        } finally {
-            btnGenerar.innerText = "Generar Texto con IA";
-            btnGenerar.disabled = false;
         }
+
+        if (!exito) {
+            resultadoDiv.innerText = "ERROR AL COMUNICAR CON GEMINI. VERIFICA TU API KEY O INTENTA DE NUEVO MÁS TARDE.";
+        }
+
+        btnGenerar.innerText = "Generar Texto con IA";
+        btnGenerar.disabled = false;
     });
 
     // Función del botón Copiar
