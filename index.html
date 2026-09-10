@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente IA - Manual de Crédito FIDESON</title>
+    <title>Asistente IA - Procedimientos de Cartera FIDESON</title>
     <style>
         :root {
             --primary: #800020; /* Color guinda institucional */
@@ -58,74 +58,125 @@
 <body>
 
     <header>
-        <h1>FIDESON — Consulta Inteligente del Manual de Crédito</h1>
-        <span>Revisión #32 (Noviembre 2025)</span>
+        <h1>FIDESON — Consulta de Procedimientos de Cartera</h1>
+        <span>Manuales Operativos (Versión 2026)</span>
     </header>
 
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <h3>Consultas Frecuentes</h3>
-            <button class="quick-btn" onclick="askQuestion('¿Cuáles son los requisitos y condiciones del programa Mujer Activa?')">Programa Mujer Activa</button>
-            <button class="quick-btn" onclick="askQuestion('¿Qué se requiere para el programa PYME Sonora?')">Programa PYME Sonora</button>
-            <button class="quick-btn" onclick="askQuestion('¿Cuáles son las políticas de cobro por cartera vencida?')">Políticas de Cobranza</button>
-            <button class="quick-btn" onclick="askQuestion('¿Qué garantías personales y reales acepta FIDESON?')">Garantías Reales y Personales</button>
-            <button class="quick-btn" onclick="askQuestion('¿Cuáles son las facultades de autorización del Coordinador Ejecutivo?')">Facultades de Autorización</button>
-            <button class="quick-btn" onclick="askQuestion('¿Qué características tiene el programa Arranca Tu Emprendimiento?')">Arranca Tu Emprendimiento</button>
+            <h3>Procedimientos Rápidos</h3>
+            <button class="quick-btn" onclick="askQuestion('¿Cómo se realiza el cierre de cartera mensual?')">1. Cierre de Cartera Mensual</button>
+            <button class="quick-btn" onclick="askQuestion('¿Cuáles son los pasos para el cierre de día en cartera?')">2. Cierre de Día en Cartera</button>
+            <button class="quick-btn" onclick="askQuestion('¿Cómo se realiza la aplicación de pagos diarios?')">3. Aplicación de Pagos Diarios</button>
+            <button class="quick-btn" onclick="askQuestion('¿Qué se requiere para emitir la Carta de Liberación de Crédito?')">4. Carta de Liberación</button>
+            <button class="quick-btn" onclick="askQuestion('¿Cómo aplicar un Acuerdo de Liquidación o Liberación?')">5. Acuerdo de Liquidación</button>
+            <button class="quick-btn" onclick="askQuestion('¿Cómo solicitar apoyo para expedición de cheque o transferencia?')">6. Solicitud de Apoyo / Cheque</button>
         </div>
 
         <!-- Chat Principal -->
         <div class="chat-area">
             <div class="chat-messages" id="chatMessages">
                 <div class="message bot">
-                    Hola, soy tu asistente virtual experto en el <strong>Manual de Normas y Políticas de Crédito de FIDESON</strong>.<br><br>
-                    Escribe tu duda en el campo de texto inferior para consultar condiciones, programas, garantías o procesos normativos.
+                    Hola, soy tu asistente virtual experto en los <strong>Procedimientos Operativos del Sistema de Cartera de FIDESON</strong>.<br><br>
+                    Escribe tu duda o haz clic en las opciones laterales para consultar pasos, validaciones, rutas de almacenamiento y excepciones operativas.
                 </div>
             </div>
             <div class="chat-input-area">
-                <input type="text" id="userInput" placeholder="Escribe tu pregunta sobre el manual de FIDESON..." onkeypress="handleKeyPress(event)">
+                <input type="text" id="userInput" placeholder="Escribe tu pregunta sobre los procedimientos de cartera..." onkeypress="handleKeyPress(event)">
                 <button onclick="sendUserMessage()">Preguntar</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Base de conocimiento del Manual FIDESON
+        // Base de conocimiento cargada con los Procedimientos Operativos de Cartera
         const fidesonKB = [
             {
-                keywords: ["mujer activa", "mujer", "mujeres", "emprendedoras"],
-                answer: `**Programa Mujer Activa**\n• **Objetivo:** Impulsar la autonomía económica de las mujeres mediante acceso al financiamiento.\n• **Población:** Mujeres sonorenses emprendedoras y empresarias.\n• **Monto:** Mínimo $25,000 | Máximo $200,000 (Hasta el 80% del proyecto).\n• **Plazos:** Capital de trabajo hasta 30 meses (6 de gracia); Maquinaria/Equipo hasta 42 meses (6 de gracia).\n• **Tasa:** Normal 12% anual | Pago Oportuno 6% anual | Moratoria 2x normal.\n• **Garantía:** Cobertura de 1:1 y/o Aval.\n• **Límites:** Negocio nuevo (<12 meses): Hasta $50,000. Con incubación o 1 año operando: Hasta $200,000.`,
-                source: "Página 22 del Manual"
+                keywords: ["cierre mensual", "mensual", "cierre de cartera mensual", "contabilidad", "excel", "rutas"],
+                answer: `**Procedimiento 1: Cierre de Cartera Mensual**\n
+• **Objetivo:** Generar, depurar y conciliar los reportes de cierre del mes con Contabilidad.\n
+• **Ruta Local:** \`C:\\Cierre Cartera Mensual\\2026\\[Nombre del Mes]\\\`\n
+• **Pasos Clave:**
+  1. **Generación:** Entrar a *Cierre Diario* → Columna *Cierre Mensual* → Clic en el candado rojo del último día del mes → *Consultar/Actualizar* → Descargar archivo.
+  2. **Organización:** Mover de Descargas a la ruta local correspondiente.
+  3. **Depuración Excel:** Conservar solo las pestañas **Cartera Activa** y **Cuentas de Orden** (eliminar el resto). Aplicar encabezados institucionales, formato de tabla y ordenar cronológicamente por Fecha de Apertura.
+  4. **Exportación:** Guardar cada pestaña como un libro independiente con su nomenclatura habitual.
+  5. **Envío:** Enviar correo a José Armando Solís, Vianey Mayorga y Teresita Rodríguez para confirmación de cuadre.\n
+• **Consideraciones:** Si hay diferencias, realizar revisión detallada en conjunto.`,
+                source: "Procedimiento 1: Cierre de Cartera Mensual"
             },
             {
-                keywords: ["pyme", "pyme sonora", "empresarios"],
-                answer: `**Programa PYME Sonora**\n• **Población:** Micro, pequeña y mediana empresa con mínimo 12 meses de operación comprobable vía CIF.\n• **Monto:** Mínimo $50,000 | Máximo $1,500,000 (Hasta 80% de inversión).\n• **Plazos:** Capital de trabajo hasta 36 meses (6 meses gracia); Maquinaria hasta 48 meses (6 meses gracia).\n• **Tasas:** Normal 15% | Pago Oportuno 12% | Tasa preferencial para socios de Cámaras: 12% con pronta respuesta al 10%.\n• **Garantía:** Cobertura 1:1. Aval según determine el Comité.\n• **Requisitos:** Créditos >$250,000 requieren Estados Financieros y Proyecciones. El IVA no es financiable.`,
-                source: "Página 23 y 59-60 del Manual"
+                keywords: ["cierre diario", "cierre de día", "cerrar dia", "monitor de pagos", "moratorio", "interés moratorio"],
+                answer: `**Procedimiento 2: Cierre de Día en Cartera**\n
+• **Objetivo:** Ejecutar el corte diario en Cartera y actualizar los estatus del sistema.\n
+• **Ruta en Sistema:** Pagos → Monitor de Pagos.\n
+• **Pasos Clave:**
+  1. En el menú superior seleccionar **Cierres**.
+  2. Hacer clic en **Cerrar Día** y confirmar (*Aceptar*).
+  3. **Validación Obligatoria:** Cerciorarse de que el indicador en la sección de Estado muestre siempre **Interés Moratorio**.\n
+• **Excepción Crítica:** NO procesar pagos del día sin verificar previamente que el cierre del día anterior esté completado correctamente.`,
+                source: "Procedimiento 2: Cierre de Día en Cartera"
             },
             {
-                keywords: ["empléate", "empleate", "autoempleo", "grupal"],
-                answer: `**Programa Empléate**\n• **Objetivo:** Financiamiento para autoempleo.\n• **Montos:** Individual: $5,000 a $10,000 (hasta $25,000) | Grupal (máx 5 integrantes): Hasta $20,000 ($25,000) por integrante.\n• **Financiamiento:** 100% de la inversión.\n• **Plazos:** Capital de trabajo ind. hasta 12 meses; Grupal hasta 24 meses; Maquinaria hasta 36 meses con 6 meses de gracia.\n• **Tasas:** Normal 12% | Pago Oportuno 6% | Moratoria 2x normal.`,
-                source: "Página 22 del Manual"
+                keywords: ["pagos diarios", "aplicación de pagos", "abono", "hoja de trabajo", "excedentes", "reestructura", "gracia"],
+                answer: `**Procedimiento 3: Aplicación de Pagos Diarios**\n
+• **Objetivo:** Registrar y distribuir abonos utilizando la Hoja de Trabajo Diaria de Pagos.\n
+• **Mapeo de Formas de Pago:**
+  - *PAGO CUENTA DE TERCERO BNET* → Transferencia / BNET
+  - *DEPOSITO EN EFECTIVO* → Efectivo
+  - *SPEI RECIBIDOBANAMEX* → SPEI / Transferencia Interbancaria\n
+• **Manejo de Excedentes:** Si supera el saldo vencido, elegir en el modal:
+  - *Siguientes Amortizaciones:* Aplica a las cuotas programadas.
+  - *Pago Vencidos y Capital:* Liquida lo vencido y abona el remanente como amortización extraordinaria al capital vigente.\n
+• **Excepciones / Consideraciones:**
+  - **Comisión por Apertura:** Omitir la captura en el sistema.
+  - **Bloqueo por Reestructura:** NO capturar el pago; colocar leyenda aclaratoria en la hoja de trabajo.
+  - **Días de Gracia:** Se otorgan 5 días de gracia para pago oportuno (habilitar/deshabilitar casilla *Aplica Oportuno*).`,
+                source: "Procedimiento 3: Aplicación de Pagos Diarios"
             },
             {
-                keywords: ["arranca tu emprendimiento", "universitarios", "estudiantes"],
-                answer: `**Programa ¡Arranca Tu Emprendimiento!**\n• **Dirigido a:** Estudiantes de 5to semestre en adelante (carreras económico-administrativas e ingenierías) ganadores de la convocatoria oficial.\n• **Monto:** De $50,000 a $500,000 (Financia hasta el 100%).\n• **Plazo:** Capital de Trabajo hasta 36 meses (6 gracia); Maquinaria hasta 45 meses (9 gracia).\n• **Tasa:** 6% anual fija | Moratoria 2x normal.\n• **Condiciones Especiales:** SIN comisión por apertura | SIN garantía y SIN aval.`,
-                source: "Página 26 del Manual"
+                keywords: ["carta de liberación", "liberacion", "keyla", "multicrédito", "estado de cuenta", "bitácora", "archivo el bueno"],
+                answer: `**Procedimiento 4: Carta de Liberación de Crédito**\n
+• **Objetivo:** Validar el historial operativo y financiero para la emisión de la Carta de Liberación.\n
+• **Pasos Clave:**
+  1. Recibir solicitud de Keyla y consultar en *Cartera → Pagos → Aplicación de Pagos*.
+  2. **Control Multicrédito:** Validar que el cliente no tenga otros créditos con atraso o morosidad (bloquea el trámite automáticamente).
+  3. **Estado de Cuenta:** Generar en *Reportes → Estado de Cuenta Completo*, exportar a PDF e imprimir. Verificar que el estatus figure explícitamente como **LIQUIDADO**.
+  4. **Firmas:** Firmar revisión analítica, dejar espacio para José Armando Solís y entregar a Vianey Mayorga.
+  5. **Bitácora en Red (\`N:\\Archivo "El Bueno"\`):**
+     - Columna 1 (Delia): Fecha de entrega a Vianey Mayorga.
+     - Columna 2: Fecha de entrega a Martín para trámite final.`,
+                source: "Procedimiento 4: Carta de Liberación de Crédito"
             },
             {
-                keywords: ["cobranza", "cartera", "mora", "vencida", "judicial", "días"],
-                answer: `**Estrategia de Cobranza en FIDESON:**\n1. **Cobranza Preventiva (0-30 días mora):** Recordatorio por WhatsApp, correo o teléfono. Reserva 0%.\n2. **Cobranza Administrativa (31-90 días mora):** Gestión interna y por despachos externos extrajudiciales. Reserva 25% a 50%.\n3. **Cobranza Judicial (91+ días mora):** Se da por vencido anticipadamente el crédito y se demanda judicialmente. Reserva 75% a 100%.\n• **Orden de Pago:** 1) Comisiones/Gastos, 2) Moratorios, 3) Intereses Normales, 4) Impuestos, 5) Capital.`,
-                source: "Páginas 38-39 y 45 del Manual"
+                keywords: ["acuerdo de liquidacion", "convenio", "quito", "quita", "condonacion", "auxiliar de cuentas", "conciliaciones"],
+                answer: `**Procedimiento 5: Aplicación de Acuerdo de Liquidación o Liberación**\n
+• **Objetivo:** Aplicar pagos y condonaciones autorizadas mediante Convenio o Acuerdo.\n
+• **Ruta del Auxiliar:** \`N:\\2026\\CONCILIACIONES 2026\\\` (proporcionado por Vianey Mayorga).\n
+• **Pasos Clave:**
+  1. Ingresar a *Pagos → Aplicar Pagos* y validar fecha con el Estado de Cuenta.
+  2. Capturar la condonación en el campo **Quita** y el total pagado en **Monto de Pago**.
+  3. Clic en **Pagar** → Seleccionar **Pagos Vencidos** e imprimir recibo.
+  4. Confirmar que el sistema muestre la leyenda **LIQUIDADO**.
+  5. Integrar expediente original (con recibo y auxiliar) y sacar **2 juegos de copias**:
+     - *Copia 1:* Resguardo personal / control.
+     - *Copia 2:* Entrega a Martín (archivo general).\n
+• **Excepciones:** Si el crédito está bloqueado, solicitar desbloqueo a Ignacio o Rosario. Si no hay Auxiliar, pausar fotocopiado.`,
+                source: "Procedimiento 5: Aplicación de Acuerdo de Liquidación"
             },
             {
-                keywords: ["garantía", "garantias", "hipoteca", "prenda", "aval", "avaluo"],
-                answer: `**Políticas de Garantías:**\n• **Personales:** Obligado Solidario (contratos) y Avales (pagarés).\n• **Prenda:** Garantía natural u otros muebles. En personas físicas el depositario es el acreditado; en morales el accionista principal.\n• **Hipoteca:** Inmuebles libres de gravamen con Escritura Pública en R.P.P.\n• **Avalúos:** Se acepta valor catastral del predial reciente o avalúos con antigüedad no mayor a 1 año.\n• **Vehículos:** Modelos con antigüedad máx de 7 años y póliza de seguro de cobertura amplia con endoso preferente a FIDESON.`,
-                source: "Páginas 18-19 del Manual"
-            },
-            {
-                keywords: ["facultades", "autorización", "coordinador", "consejo", "monto"],
-                answer: `**Facultades de Autorización de Crédito:**\n• **Consejo Directivo:** Exclusivo para créditos mayores a $1,500,001.\n• **Coordinador Ejecutivo:** Créditos o garantías hasta por $1,500,000.\n• **Formalización:**\n  - Hasta $50,000: Contrato privado ante 2 testigos + RUG.\n  - De $50,001 a $500,000: Contrato privado ratificado ante notario (sin firma de testigos) + pagaré + RUG.\n  - >$500,001 o con Hipoteca: Escritura pública + pagaré + R.P.P.`,
-                source: "Páginas 21, 35 y 48 del Manual"
+                keywords: ["solicitud de apoyo", "cheque", "transferencia", "edith", "cargos diversos", "prorrateo"],
+                answer: `**Procedimiento 6: Solicitud de Apoyo para Expedición de Cheque y/o Transferencia**\n
+• **Objetivo:** Registrar en el sistema los gastos y cargos diversos asociados a solicitudes de apoyo.\n
+• **Pasos Clave:**
+  1. Recibir solicitud de Edith, firmar ambas partes y conservar acuse.
+  2. Buscar el crédito en el sistema y dirigirse a **Cargos Diversos**.
+  3. **Prorrateo:** Si el trámite involucra a varias personas, dividir el monto total de la solicitud entre el número de personas registradas.
+  4. Capturar el importe correspondiente a cada uno.
+  5. Anotar con letra la **Fecha de Captura** en la hoja de trabajo física y archivar.\n
+• **Regla de Bloqueo por Reestructura:** A diferencia de la aplicación de pagos, en este procedimiento SI el crédito está bloqueado por reestructura, **SÍ se debe aplicar el cargo en el sistema**.`,
+                source: "Procedimiento 6: Solicitud de Apoyo"
             }
         ];
 
@@ -143,7 +194,7 @@
             const typingDiv = document.createElement('div');
             typingDiv.className = 'message bot typing';
             typingDiv.id = 'typingIndicator';
-            typingDiv.innerText = 'Consultando el manual FIDESON...';
+            typingDiv.innerText = 'Consultando los manuales de cartera de FIDESON...';
             document.getElementById('chatMessages').appendChild(typingDiv);
             scrollToBottom();
 
@@ -165,8 +216,8 @@
             }
             if (best && maxScore > 0) return best;
             return {
-                answer: `He consultado el **Manual de Crédito de FIDESON** y no encontré un apartado exacto para esa frase específica.\n\nTe sugiero consultar los términos sobre **Sujetos de Crédito**, **Tipos de Crédito**, **Garantías** o elegir una de las opciones del menú lateral.`,
-                source: "Manual FIDESON"
+                answer: `He consultado el **Manual de Procedimientos Operativos de Cartera de FIDESON** y no encontré una regla específica para esa consulta exactas.\n\nTe sugiero revisar términos sobre **Cierre Mensual**, **Cierre de Día**, **Aplicación de Pagos**, **Cartas de Liberación**, **Acuerdos de Liquidación** o **Cargos Diversos**, o elegir una opción del menú lateral.`,
+                source: "Procedimientos de Cartera FIDESON"
             };
         }
 
