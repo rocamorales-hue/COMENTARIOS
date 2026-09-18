@@ -3,242 +3,437 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente IA - Procedimientos de Cartera FIDESON</title>
+    <title>Asistente de Reestructuración de Créditos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        corporate: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            500: '#334e68',
+                            600: '#243b53',
+                            700: '#102a43',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary: #800020; /* Color guinda institucional */
-            --primary-dark: #5c0017;
-            --secondary: #d4af37; /* Tono dorado */
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --bot-msg: #f8f9fa;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; height: 100vh; }
-
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
         }
-        header h1 { font-size: 1.4rem; font-weight: 600; }
-        header span { font-size: 0.85rem; background: rgba(255, 255, 255, 0.15); padding: 4px 12px; border-radius: 12px; }
-
-        .container { display: flex; flex: 1; overflow: hidden; max-width: 1400px; margin: 0 auto; width: 100%; padding: 20px; gap: 20px; }
-
-        /* Sidebar con accesos rápidos */
-        .sidebar { width: 320px; background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 15px; }
-        .sidebar h3 { font-size: 1rem; color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 5px; }
-        .quick-btn { background: #f8f9fa; border: 1px solid #e0e0e0; padding: 10px 14px; border-radius: 8px; text-align: left; font-size: 0.88rem; cursor: pointer; transition: all 0.2s ease; color: #444; }
-        .quick-btn:hover { background: #eef2f5; border-color: var(--primary); color: var(--primary); }
-
-        /* Área del Chat */
-        .chat-area { flex: 1; background: var(--card-bg); border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; }
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        
-        .message { max-width: 80%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; font-size: 0.95rem; white-space: pre-line; }
-        .message.user { align-self: flex-end; background-color: var(--primary); color: white; border-bottom-right-radius: 2px; }
-        .message.bot { align-self: flex-start; background-color: var(--bot-msg); color: var(--text-color); border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; }
-        .message .source-tag { display: inline-block; margin-top: 8px; font-size: 0.75rem; background: #e2e8f0; color: #4a5568; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-
-        .chat-input-area { padding: 15px 20px; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; background: #fafafa; }
-        .chat-input-area input { flex: 1; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; outline: none; }
-        .chat-input-area input:focus { border-color: var(--primary); }
-        .chat-input-area button { background-color: var(--primary); color: white; border: none; padding: 0 24px; border-radius: 8px; font-weight: 600; cursor: pointer; }
-        .chat-input-area button:hover { background-color: var(--primary-dark); }
-        .typing { font-style: italic; color: #718096; font-size: 0.85rem; }
+        .accordion-content.open {
+            max-height: 1000px; /* Arbitrary large height for smooth auto transition */
+            opacity: 1;
+        }
+        .checkbox-custom:checked + label {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        /* Custom Toast */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #102a43;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
-<body>
+<body class="text-gray-800 antialiased min-h-screen pb-12">
 
-    <header>
-        <h1>FIDESON — Consulta de Procedimientos de Cartera</h1>
-        <span>Manuales Operativos (Versión 2026)</span>
+    <header class="bg-corporate-700 text-white shadow-md py-6 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Asistente de Reestructuraciones</h1>
+                <p class="text-corporate-100 text-sm mt-1">Guía operativa y validación de expedientes</p>
+            </div>
+            <div class="text-right hidden sm:block">
+                <span class="text-xs bg-corporate-600 px-3 py-1 rounded-full border border-corporate-500">
+                    <i class="fas fa-calendar-alt mr-1"></i> Límite: Día 25 del mes
+                </span>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h3>Procedimientos Rápidos</h3>
-            <button class="quick-btn" onclick="askQuestion('¿Cómo se realiza el cierre de cartera mensual?')">1. Cierre de Cartera Mensual</button>
-            <button class="quick-btn" onclick="askQuestion('¿Cuáles son los pasos para el cierre de día en cartera?')">2. Cierre de Día en Cartera</button>
-            <button class="quick-btn" onclick="askQuestion('¿Cómo se realiza la aplicación de pagos diarios?')">3. Aplicación de Pagos Diarios</button>
-            <button class="quick-btn" onclick="askQuestion('¿Qué se requiere para emitir la Carta de Liberación de Crédito?')">4. Carta de Liberación</button>
-            <button class="quick-btn" onclick="askQuestion('¿Cómo aplicar un Acuerdo de Liquidación o Liberación?')">5. Acuerdo de Liquidación</button>
-            <button class="quick-btn" onclick="askQuestion('¿Cómo solicitar apoyo para expedición de cheque o transferencia?')">6. Solicitud de Apoyo / Cheque</button>
+    <main class="max-w-4xl mx-auto px-4 mt-8">
+        <!-- Progress Overview -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-lg font-semibold text-corporate-700">Progreso del Trámite</h2>
+                <span id="progress-text" class="text-sm font-medium text-corporate-500">0% Completado</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
         </div>
 
-        <!-- Chat Principal -->
-        <div class="chat-area">
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    Hola, soy tu asistente virtual experto en los <strong>Procedimientos Operativos del Sistema de Cartera de FIDESON</strong>.<br><br>
-                    Escribe tu duda o haz clic en las opciones laterales para consultar pasos, validaciones, rutas de almacenamiento y excepciones operativas.
+        <div id="accordion-container" class="space-y-4">
+            <!-- PASO 1 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <button class="accordion-header w-full flex justify-between items-center p-5 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none" onclick="toggleAccordion('step1')">
+                    <div class="flex items-center">
+                        <span class="bg-corporate-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">1</span>
+                        <h3 class="text-lg font-semibold text-gray-800">Verificación Inicial y Desbloqueo</h3>
+                    </div>
+                    <i id="icon-step1" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="step1" class="accordion-content">
+                    <div class="p-5 border-t border-gray-200 space-y-3">
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk1-1" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk1-1" class="ml-3 block text-gray-700 cursor-pointer">Buscar el número de crédito del Formato de codificación en el sistema.</label>
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk1-2" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk1-2" class="ml-3 block text-gray-700 cursor-pointer">Si el crédito está bloqueado, solicitar desbloqueo a Ignacio.</label>
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk1-3" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk1-3" class="ml-3 block text-gray-700 cursor-pointer">Ingresar a pantalla <strong>Aplicar Pagos</strong> y confirmar Número de Crédito, Número de Persona y Nombre.</label>
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk1-4" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk1-4" class="ml-3 block text-gray-700 cursor-pointer">Verificar e ingresar fecha valor de la hoja (apartado IV).</label>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="chat-input-area">
-                <input type="text" id="userInput" placeholder="Escribe tu pregunta sobre los procedimientos de cartera..." onkeypress="handleKeyPress(event)">
-                <button onclick="sendUserMessage()">Preguntar</button>
+
+            <!-- PASO 2 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <button class="accordion-header w-full flex justify-between items-center p-5 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none" onclick="toggleAccordion('step2')">
+                    <div class="flex items-center">
+                        <span class="bg-corporate-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">2</span>
+                        <h3 class="text-lg font-semibold text-gray-800">Gestión de Saldos Guardados y Anticipo</h3>
+                    </div>
+                    <i id="icon-step2" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="step2" class="accordion-content">
+                    <div class="p-5 border-t border-gray-200 space-y-3">
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk2-1" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk2-1" class="ml-3 block text-gray-700 cursor-pointer">Consultar con Vianey/Teresita dinero a favor y anexar reporte Excel.</label>
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk2-2" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk2-2" class="ml-3 block text-gray-700 cursor-pointer">Corroborar aplicación de saldos o depósitos previos.</label>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg mt-2 border border-blue-100">
+                            <p class="text-sm font-semibold text-blue-800 mb-2">Si existe anticipo:</p>
+                            <div class="space-y-2">
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="chk2-3" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <label for="chk2-3" class="ml-3 block text-sm text-gray-700 cursor-pointer">Aplicar pago en <strong>MONTO DE PAGO</strong> (Concepto: Anticipo Reestructura).</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="chk2-4" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <label for="chk2-4" class="ml-3 block text-sm text-gray-700 cursor-pointer">Ingresar condonaciones en <strong>QUITA</strong> (Se va a Capital Vencido).</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="chk2-5" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <label for="chk2-5" class="ml-3 block text-sm text-gray-700 cursor-pointer">Imprimir el Recibo de Pago de Anticipo.</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 3 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <button class="accordion-header w-full flex justify-between items-center p-5 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none" onclick="toggleAccordion('step3')">
+                    <div class="flex items-center">
+                        <span class="bg-corporate-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">3</span>
+                        <h3 class="text-lg font-semibold text-gray-800">Liquidación y Reestructuración</h3>
+                    </div>
+                    <i id="icon-step3" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="step3" class="accordion-content">
+                    <div class="p-5 border-t border-gray-200">
+                        
+                        <!-- Calculator Tool -->
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                            <h4 class="text-md font-semibold text-gray-800 mb-4 border-b pb-2"><i class="fas fa-calculator text-corporate-500 mr-2"></i>Calculadora de Monto Quita</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Saldo Total ($)</label>
+                                    <input type="number" id="calc-saldo" class="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0.00" oninput="calculateQuita()">
+                                </div>
+                                <div class="flex items-center justify-center text-gray-400 hidden md:flex pt-6">
+                                    <i class="fas fa-minus"></i>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto a Reestructurar ($)</label>
+                                    <input type="number" id="calc-reest" class="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0.00" oninput="calculateQuita()">
+                                </div>
+                                <div class="flex items-center justify-center text-gray-400 hidden md:flex pt-6">
+                                    <i class="fas fa-equals"></i>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-800 mb-1">Monto Quita Resultante ($)</label>
+                                    <input type="text" id="calc-result" class="w-full rounded-md border border-green-300 bg-green-50 px-3 py-2 font-bold text-green-800" placeholder="0.00" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <input type="checkbox" id="chk3-1" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="chk3-1" class="ml-3 block text-gray-700 cursor-pointer">Cargar nuevamente el número de crédito en <strong>Aplicar Pagos</strong>.</label>
+                            </div>
+                            <div class="flex items-start">
+                                <input type="checkbox" id="chk3-2" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="chk3-2" class="ml-3 block text-gray-700 cursor-pointer">Ingresar cifra de 'Monto Quita' en el sistema y 'Monto a Reestructurar' en Monto Pago.</label>
+                            </div>
+                            <div class="flex items-start">
+                                <input type="checkbox" id="chk3-3" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="chk3-3" class="ml-3 block text-gray-700 cursor-pointer">Forma de Pago: Seleccionar <strong>Liquidación - Reestructura</strong> y dar clic en Pagar.</label>
+                            </div>
+                            <div class="flex items-start">
+                                <input type="checkbox" id="chk3-4" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="chk3-4" class="ml-3 block text-gray-700 cursor-pointer">Imprimir el Recibo de Pago / Liquidación emitido.</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 4 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <button class="accordion-header w-full flex justify-between items-center p-5 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none" onclick="toggleAccordion('step4')">
+                    <div class="flex items-center">
+                        <span class="bg-corporate-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">4</span>
+                        <h3 class="text-lg font-semibold text-gray-800 text-left">Validación Anterior y Verificación del Nuevo</h3>
+                    </div>
+                    <i id="icon-step4" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="step4" class="accordion-content">
+                    <div class="p-5 border-t border-gray-200 space-y-3">
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk4-1" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk4-1" class="ml-3 block text-gray-700 cursor-pointer">Verificar estado anterior: Debe decir "Bloqueado por reestructurado" o "RESTRUCTURADO".</label>
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk4-2" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk4-2" class="ml-3 block text-gray-700 cursor-pointer">Cargar Nuevo Número de Crédito y revisar <strong>DATOS DEL CRÉDITO</strong> (monto, tasa, saldo).</label>
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk4-3" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk4-3" class="ml-3 block text-gray-700 cursor-pointer">Revisar <strong>TABLA AMORTIZACIÓN</strong>: 1er corte debe ser 1 día después de la reestructuración.</label>
+                        </div>
+                        <div class="flex items-start">
+                            <input type="checkbox" id="chk4-4" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="chk4-4" class="ml-3 block text-gray-700 cursor-pointer">Revisión Pagaré: Tasa autorizada, fechas de corte/vencimiento, y plazo total.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 5 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <button class="accordion-header w-full flex justify-between items-center p-5 bg-gray-50 hover:bg-gray-100 transition-colors focus:outline-none" onclick="toggleAccordion('step5')">
+                    <div class="flex items-center">
+                        <span class="bg-corporate-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">5</span>
+                        <h3 class="text-lg font-semibold text-gray-800">Cierre, Control y Entrega</h3>
+                    </div>
+                    <i id="icon-step5" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </button>
+                <div id="step5" class="accordion-content">
+                    <div class="p-5 border-t border-gray-200">
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-start">
+                                <input type="checkbox" id="chk5-1" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="chk5-1" class="ml-3 block text-gray-700 cursor-pointer">Dar por liquidado/matado el crédito anterior.</label>
+                            </div>
+                            <div class="flex items-start">
+                                <input type="checkbox" id="chk5-2" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="chk5-2" class="ml-3 block text-gray-700 cursor-pointer">Ensamblar expediente (recibos, hoja original, anexos).</label>
+                            </div>
+                            <div class="flex items-start">
+                                <input type="checkbox" id="chk5-3" class="step-checkbox mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="chk5-3" class="ml-3 block text-gray-700 cursor-pointer">Distribución: Original a Vianey, 1ª Copia Archivo Gral, 2ª Copia Archivo Interno.</label>
+                            </div>
+                        </div>
+
+                        <!-- Status Report Generator -->
+                        <div class="bg-corporate-50 border border-corporate-100 rounded-lg p-5 shadow-sm">
+                            <h4 class="text-md font-semibold text-corporate-700 mb-4 border-b border-corporate-100 pb-2"><i class="fas fa-clipboard-list mr-2"></i>Generador de Reporte / Ticket</h4>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Estatus del Trámite</label>
+                                    <select id="report-status" class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-blue-500 focus:border-blue-500" onchange="generateReport()">
+                                        <option value="Éxito">Procesado con Éxito</option>
+                                        <option value="Error">Error / En Tránsito</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Núm. de Crédito (Nuevo / Anterior)</label>
+                                    <input type="text" id="report-credit" class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ej. 123456" oninput="generateReport()">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Observaciones / Descripción del Error</label>
+                                <textarea id="report-notes" rows="2" class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Detalle adicional o mensaje para el ticket..." oninput="generateReport()"></textarea>
+                            </div>
+
+                            <div class="relative">
+                                <textarea id="report-output" rows="4" class="w-full bg-white rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 font-mono" readonly></textarea>
+                                <button onclick="copyToClipboard()" class="absolute right-2 bottom-2 bg-corporate-600 hover:bg-corporate-700 text-white text-xs px-3 py-1.5 rounded transition-colors shadow">
+                                    <i class="fas fa-copy mr-1"></i> Copiar
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast"><i class="fas fa-check-circle mr-2 text-green-400"></i>Copiado al portapapeles</div>
 
     <script>
-        // Base de conocimiento cargada con los Procedimientos Operativos de Cartera
-        const fidesonKB = [
-            {
-                keywords: ["cierre mensual", "mensual", "cierre de cartera mensual", "contabilidad", "excel", "rutas"],
-                answer: `**Procedimiento 1: Cierre de Cartera Mensual**\n
-• **Objetivo:** Generar, depurar y conciliar los reportes de cierre del mes con Contabilidad.\n
-• **Ruta Local:** \`C:\\Cierre Cartera Mensual\\2026\\[Nombre del Mes]\\\`\n
-• **Pasos Clave:**
-  1. **Generación:** Entrar a *Cierre Diario* → Columna *Cierre Mensual* → Clic en el candado rojo del último día del mes → *Consultar/Actualizar* → Descargar archivo.
-  2. **Organización:** Mover de Descargas a la ruta local correspondiente.
-  3. **Depuración Excel:** Conservar solo las pestañas **Cartera Activa** y **Cuentas de Orden** (eliminar el resto). Aplicar encabezados institucionales, formato de tabla y ordenar cronológicamente por Fecha de Apertura.
-  4. **Exportación:** Guardar cada pestaña como un libro independiente con su nomenclatura habitual.
-  5. **Envío:** Enviar correo a José Armando Solís, Vianey Mayorga y Teresita Rodríguez para confirmación de cuadre.\n
-• **Consideraciones:** Si hay diferencias, realizar revisión detallada en conjunto.`,
-                source: "Procedimiento 1: Cierre de Cartera Mensual"
-            },
-            {
-                keywords: ["cierre diario", "cierre de día", "cerrar dia", "monitor de pagos", "moratorio", "interés moratorio"],
-                answer: `**Procedimiento 2: Cierre de Día en Cartera**\n
-• **Objetivo:** Ejecutar el corte diario en Cartera y actualizar los estatus del sistema.\n
-• **Ruta en Sistema:** Pagos → Monitor de Pagos.\n
-• **Pasos Clave:**
-  1. En el menú superior seleccionar **Cierres**.
-  2. Hacer clic en **Cerrar Día** y confirmar (*Aceptar*).
-  3. **Validación Obligatoria:** Cerciorarse de que el indicador en la sección de Estado muestre siempre **Interés Moratorio**.\n
-• **Excepción Crítica:** NO procesar pagos del día sin verificar previamente que el cierre del día anterior esté completado correctamente.`,
-                source: "Procedimiento 2: Cierre de Día en Cartera"
-            },
-            {
-                keywords: ["pagos diarios", "aplicación de pagos", "abono", "hoja de trabajo", "excedentes", "reestructura", "gracia"],
-                answer: `**Procedimiento 3: Aplicación de Pagos Diarios**\n
-• **Objetivo:** Registrar y distribuir abonos utilizando la Hoja de Trabajo Diaria de Pagos.\n
-• **Mapeo de Formas de Pago:**
-  - *PAGO CUENTA DE TERCERO BNET* → Transferencia / BNET
-  - *DEPOSITO EN EFECTIVO* → Efectivo
-  - *SPEI RECIBIDOBANAMEX* → SPEI / Transferencia Interbancaria\n
-• **Manejo de Excedentes:** Si supera el saldo vencido, elegir en el modal:
-  - *Siguientes Amortizaciones:* Aplica a las cuotas programadas.
-  - *Pago Vencidos y Capital:* Liquida lo vencido y abona el remanente como amortización extraordinaria al capital vigente.\n
-• **Excepciones / Consideraciones:**
-  - **Comisión por Apertura:** Omitir la captura en el sistema.
-  - **Bloqueo por Reestructura:** NO capturar el pago; colocar leyenda aclaratoria en la hoja de trabajo.
-  - **Días de Gracia:** Se otorgan 5 días de gracia para pago oportuno (habilitar/deshabilitar casilla *Aplica Oportuno*).`,
-                source: "Procedimiento 3: Aplicación de Pagos Diarios"
-            },
-            {
-                keywords: ["carta de liberación", "liberacion", "keyla", "multicrédito", "estado de cuenta", "bitácora", "archivo el bueno"],
-                answer: `**Procedimiento 4: Carta de Liberación de Crédito**\n
-• **Objetivo:** Validar el historial operativo y financiero para la emisión de la Carta de Liberación.\n
-• **Pasos Clave:**
-  1. Recibir solicitud de Keyla y consultar en *Cartera → Pagos → Aplicación de Pagos*.
-  2. **Control Multicrédito:** Validar que el cliente no tenga otros créditos con atraso o morosidad (bloquea el trámite automáticamente).
-  3. **Estado de Cuenta:** Generar en *Reportes → Estado de Cuenta Completo*, exportar a PDF e imprimir. Verificar que el estatus figure explícitamente como **LIQUIDADO**.
-  4. **Firmas:** Firmar revisión analítica, dejar espacio para José Armando Solís y entregar a Vianey Mayorga.
-  5. **Bitácora en Red (\`N:\\Archivo "El Bueno"\`):**
-     - Columna 1 (Delia): Fecha de entrega a Vianey Mayorga.
-     - Columna 2: Fecha de entrega a Martín para trámite final.`,
-                source: "Procedimiento 4: Carta de Liberación de Crédito"
-            },
-            {
-                keywords: ["acuerdo de liquidacion", "convenio", "quito", "quita", "condonacion", "auxiliar de cuentas", "conciliaciones"],
-                answer: `**Procedimiento 5: Aplicación de Acuerdo de Liquidación o Liberación**\n
-• **Objetivo:** Aplicar pagos y condonaciones autorizadas mediante Convenio o Acuerdo.\n
-• **Ruta del Auxiliar:** \`N:\\2026\\CONCILIACIONES 2026\\\` (proporcionado por Vianey Mayorga).\n
-• **Pasos Clave:**
-  1. Ingresar a *Pagos → Aplicar Pagos* y validar fecha con el Estado de Cuenta.
-  2. Capturar la condonación en el campo **Quita** y el total pagado en **Monto de Pago**.
-  3. Clic en **Pagar** → Seleccionar **Pagos Vencidos** e imprimir recibo.
-  4. Confirmar que el sistema muestre la leyenda **LIQUIDADO**.
-  5. Integrar expediente original (con recibo y auxiliar) y sacar **2 juegos de copias**:
-     - *Copia 1:* Resguardo personal / control.
-     - *Copia 2:* Entrega a Martín (archivo general).\n
-• **Excepciones:** Si el crédito está bloqueado, solicitar desbloqueo a Ignacio o Rosario. Si no hay Auxiliar, pausar fotocopiado.`,
-                source: "Procedimiento 5: Aplicación de Acuerdo de Liquidación"
-            },
-            {
-                keywords: ["solicitud de apoyo", "cheque", "transferencia", "edith", "cargos diversos", "prorrateo"],
-                answer: `**Procedimiento 6: Solicitud de Apoyo para Expedición de Cheque y/o Transferencia**\n
-• **Objetivo:** Registrar en el sistema los gastos y cargos diversos asociados a solicitudes de apoyo.\n
-• **Pasos Clave:**
-  1. Recibir solicitud de Edith, firmar ambas partes y conservar acuse.
-  2. Buscar el crédito en el sistema y dirigirse a **Cargos Diversos**.
-  3. **Prorrateo:** Si el trámite involucra a varias personas, dividir el monto total de la solicitud entre el número de personas registradas.
-  4. Capturar el importe correspondiente a cada uno.
-  5. Anotar con letra la **Fecha de Captura** en la hoja de trabajo física y archivar.\n
-• **Regla de Bloqueo por Reestructura:** A diferencia de la aplicación de pagos, en este procedimiento SI el crédito está bloqueado por reestructura, **SÍ se debe aplicar el cargo en el sistema**.`,
-                source: "Procedimiento 6: Solicitud de Apoyo"
+        // Accordion Logic
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Close all others (optional, keeps UI clean)
+                document.querySelectorAll('.accordion-content').forEach(el => el.classList.remove('open'));
+                document.querySelectorAll('.fa-chevron-down').forEach(el => el.style.transform = 'rotate(0deg)');
+                
+                content.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
             }
-        ];
-
-        function handleKeyPress(e) { if (e.key === 'Enter') sendUserMessage(); }
-        function askQuestion(q) { document.getElementById('userInput').value = q; sendUserMessage(); }
-
-        function sendUserMessage() {
-            const inputEl = document.getElementById('userInput');
-            const query = inputEl.value.trim();
-            if (!query) return;
-
-            appendMessage(query, 'user');
-            inputEl.value = '';
-
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'message bot typing';
-            typingDiv.id = 'typingIndicator';
-            typingDiv.innerText = 'Consultando los manuales de cartera de FIDESON...';
-            document.getElementById('chatMessages').appendChild(typingDiv);
-            scrollToBottom();
-
-            setTimeout(() => {
-                const indicator = document.getElementById('typingIndicator');
-                if (indicator) indicator.remove();
-                const res = searchKB(query);
-                appendMessage(res.answer, 'bot', res.source);
-            }, 500);
         }
 
-        function searchKB(query) {
-            const q = query.toLowerCase();
-            let best = null, maxScore = 0;
-            for (const item of fidesonKB) {
-                let score = 0;
-                for (const kw of item.keywords) { if (q.includes(kw)) score += 2; }
-                if (score > maxScore) { maxScore = score; best = item; }
+        // Default open the first section
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleAccordion('step1');
+            generateReport(); // Initialize report box
+        });
+
+        // Progress Bar Logic
+        const checkboxes = document.querySelectorAll('.step-checkbox');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+
+        checkboxes.forEach(box => {
+            box.addEventListener('change', updateProgress);
+        });
+
+        function updateProgress() {
+            const total = checkboxes.length;
+            const checked = document.querySelectorAll('.step-checkbox:checked').length;
+            const percentage = Math.round((checked / total) * 100);
+            
+            progressBar.style.width = percentage + '%';
+            progressText.innerText = percentage + '% Completado';
+            
+            if(percentage === 100) {
+                progressBar.classList.remove('bg-blue-600');
+                progressBar.classList.add('bg-green-500');
+            } else {
+                progressBar.classList.add('bg-blue-600');
+                progressBar.classList.remove('bg-green-500');
             }
-            if (best && maxScore > 0) return best;
-            return {
-                answer: `He consultado el **Manual de Procedimientos Operativos de Cartera de FIDESON** y no encontré una regla específica para esa consulta exactas.\n\nTe sugiero revisar términos sobre **Cierre Mensual**, **Cierre de Día**, **Aplicación de Pagos**, **Cartas de Liberación**, **Acuerdos de Liquidación** o **Cargos Diversos**, o elegir una opción del menú lateral.`,
-                source: "Procedimientos de Cartera FIDESON"
-            };
         }
 
-        function appendMessage(text, sender, source = null) {
-            const container = document.getElementById('chatMessages');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${sender}`;
-            msgDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            if (source) {
-                const s = document.createElement('div');
-                s.className = 'source-tag';
-                s.innerText = `Fuente: ${source}`;
-                msgDiv.appendChild(s);
-            }
-            container.appendChild(msgDiv);
-            scrollToBottom();
+        // Calculator Logic
+        function calculateQuita() {
+            const saldoTotal = parseFloat(document.getElementById('calc-saldo').value) || 0;
+            const montoReestructurar = parseFloat(document.getElementById('calc-reest').value) || 0;
+            
+            const quita = saldoTotal - montoReestructurar;
+            
+            const resultInput = document.getElementById('calc-result');
+            // Format to 2 decimal places
+            resultInput.value = quita.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
         }
 
-        function scrollToBottom() {
-            const container = document.getElementById('chatMessages');
-            container.scrollTop = container.scrollHeight;
+        // Report Generator Logic
+        function generateReport() {
+            const status = document.getElementById('report-status').value;
+            const credit = document.getElementById('report-credit').value || '[No especificado]';
+            const notes = document.getElementById('report-notes').value || 'Ninguna.';
+            const date = new Date().toLocaleDateString('es-MX');
+
+            let reportText = `--- REPORTE DE REESTRUCTURACIÓN ---\n`;
+            reportText += `Fecha: ${date}\n`;
+            reportText += `Crédito: ${credit}\n`;
+            reportText += `Estatus: ${status}\n`;
+            reportText += `Observaciones: ${notes}\n`;
+            
+            if (status === 'Error') {
+                reportText += `\n>> FAVOR DE REVISAR TICKET / SISTEMA <<`;
+            } else {
+                reportText += `\n>> EXPEDIENTE COMPLETADO Y ENTREGADO <<`;
+            }
+
+            document.getElementById('report-output').value = reportText;
+        }
+
+        // Copy to Clipboard (using execCommand for iframe compatibility as requested)
+        function copyToClipboard() {
+            const copyText = document.getElementById('report-output');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand('copy');
+                showToast();
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+            
+            // Clear selection
+            window.getSelection().removeAllRanges();
+        }
+
+        // Toast display
+        function showToast() {
+            const toast = document.getElementById("toast");
+            toast.className = "show";
+            setTimeout(function(){ 
+                toast.className = toast.className.replace("show", ""); 
+            }, 3000);
         }
     </script>
 </body>
